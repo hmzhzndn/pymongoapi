@@ -1,0 +1,48 @@
+# Obtain JWT Token
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "123"
+}
+
+###
+
+# Use JWT Token
+GET http://127.0.0.1:8000/students/student/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTk0NDUzLCJpYXQiOjE3MzI1OTQxNTMsImp0aSI6IjVkMTliNzdiNDhhYTQzOGVhYWVjYjAzNzY3Zjc2NTk4IiwidXNlcl9pZCI6MX0.A5AZFEF6zhdr0liSkOw1tt3XzjMuddXOtadO79sXN0E
+
+###
+
+# Test POST Request
+POST http://127.0.0.1:8000/students/student/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTk0MTM0LCJpYXQiOjE3MzI1OTM4MzQsImp0aSI6IjhmYzczOGFkZmNiNzRkM2E5NDYyMDU0MDBhYTk1NWZkIiwidXNlcl9pZCI6MX0.dL_IFjmNuXvyALOivF1G99Is5itP79UPYbNAa1Fmc_g
+
+{
+    "student_id": 5,
+    "name": "Haziq Khalis",
+    "age": 22,
+    "course": "Copmuter Networks"
+}
+
+###
+
+# Test PUT Request
+PUT http://127.0.0.1:8000/students/student/67454973d95c6cb089c881de/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTk0NDUzLCJpYXQiOjE3MzI1OTQxNTMsImp0aSI6IjVkMTliNzdiNDhhYTQzOGVhYWVjYjAzNzY3Zjc2NTk4IiwidXNlcl9pZCI6MX0.A5AZFEF6zhdr0liSkOw1tt3XzjMuddXOtadO79sXN0E
+
+{
+    "student_id": 5,
+    "name": "Haziq Khalis",
+    "age": 22,
+    "course": "Computer Networks"
+}
+
+###
+
+# Test DELETE Request
+DELETE http://127.0.0.1:8000/students/student/1/
+Authorization: Bearer <your-jwt-token>

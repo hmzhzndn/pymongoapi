@@ -14,6 +14,7 @@ from pathlib import Path
 import pymongo
 from pymongo import MongoClient
 from django.conf import settings
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'students',
 ]
 
@@ -82,7 +85,13 @@ WSGI_APPLICATION = 'pymongoapi.wsgi.application'
 MONGO_CLIENT = MongoClient('mongodb://localhost:27017/')  # Replace with your actual MongoDB URI
 MONGO_DB = MONGO_CLIENT['mydatabase']  # Replace with your actual MongoDB database name
 
-
+# Relational Database for Django Models
+DATABASES = {
+    'default': {  # Relational database for Django's built-in features
+        'ENGINE': 'django.db.backends.sqlite3',  # SQLite as an example
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

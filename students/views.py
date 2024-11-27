@@ -1,65 +1,61 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-# students/views.py
-from django.http import JsonResponse
+from rest_framework.viewsets import ViewSet
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Student
 from bson import ObjectId
-from django.views.decorators.csrf import csrf_exempt
-import json
 from bson.errors import InvalidId
-from django.conf import settings
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 
-@csrf_exempt
-def create_student(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        student_id = Student.insert_student(data)
-        return JsonResponse({'status': 'success', 'student_id': str(student_id)})
+class StudentViewSet(ViewSet):
+    def create(self, request):
+        try:
+            # Parse data from the request
+            data = request.data
+            # Insert data into MongoDB
+            student_id = Student.insert_student(data)
+            return Response({'status': 'success', 'student_id': str(student_id)}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_student(request, student_id):
-    try:
-        # Convert the student_id to an ObjectId
-        student_object_id = ObjectId(student_id)
-        
-        # Retrieve the student data, excluding `_id` from the result
-        student = settings.MONGO_DB.students.find_one({"_id": student_object_id}, {"_id": 0})
+    def retrieve(self, request, pk=None):
+        try:
+            student = Student.get_student(pk)
+            if not student:
+                return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
+            student["_id"] = str(student["_id"])  # Convert ObjectId to string for JSON serialization
+            return Response(student, status=status.HTTP_200_OK)
+        except InvalidId:
+            return Response({"error": "Invalid student ID format"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        if student is None:
-            return JsonResponse({"error": "Student not found"}, status=404)
+    def update(self, request, pk=None):
+        try:
+            data = request.data
+            updated_count = Student.update_student(pk, data)
+            if updated_count:
+                return Response({'status': 'success', 'updated_count': updated_count}, status=status.HTTP_200_OK)
+            return Response({'error': 'Update failed'}, status=status.HTTP_400_BAD_REQUEST)
+        except InvalidId:
+            return Response({"error": "Invalid student ID format"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return JsonResponse(student)
-    
-    except InvalidId:
-        return JsonResponse({"error": "Invalid student ID format"}, status=400)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    def destroy(self, request, pk=None):
+        try:
+            deleted_count = Student.delete_student(pk)
+            if deleted_count:
+                return Response({'status': 'success', 'deleted_count': deleted_count}, status=status.HTTP_200_OK)
+            return Response({'error': 'Delete failed'}, status=status.HTTP_400_BAD_REQUEST)
+        except InvalidId:
+            return Response({"error": "Invalid student ID format"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
-def update_student(request, student_id):
-    if request.method == 'PUT':
-        data = json.loads(request.body)
-        updated_count = Student.update_student(student_id, data)
-        if updated_count:
-            return JsonResponse({'status': 'success', 'updated_count': updated_count})
-        else:
-            return JsonResponse({'error': 'Update failed'}, status=400)
-
-@csrf_exempt
-def delete_student(request, student_id):
-    if request.method == 'DELETE':
-        deleted_count = Student.delete_student(student_id)
-        if deleted_count:
-            return JsonResponse({'status': 'success', 'deleted_count': deleted_count})
-        else:
-            return JsonResponse({'error': 'Delete failed'}, status=400)
-
-@csrf_exempt
-def get_all_students(request):
-    students = Student.get_all_students()
-    return JsonResponse({'students': students})
+    def list(self, request):
+        try:
+            students = Student.get_all_students()
+            for student in students:
+                student["_id"] = str(student["_id"])  # Convert ObjectId to string
+            return Response({'students': students}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
