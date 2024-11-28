@@ -10,21 +10,20 @@ Content-Type: application/json
 ###
 
 # Use JWT Token
-GET http://127.0.0.1:8000/students/student/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTk0NDUzLCJpYXQiOjE3MzI1OTQxNTMsImp0aSI6IjVkMTliNzdiNDhhYTQzOGVhYWVjYjAzNzY3Zjc2NTk4IiwidXNlcl9pZCI6MX0.A5AZFEF6zhdr0liSkOw1tt3XzjMuddXOtadO79sXN0E
+GET http://127.0.0.1:8000/students/student/673d5b2e792b74d3d11a1575/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzYxOTE4LCJpYXQiOjE3MzI3NjE2MTgsImp0aSI6ImNlNWE5Y2YyZWJmYTQzZmI4MzFkNTA3NjQyMWY5ZmU4IiwidXNlcl9pZCI6MX0.ajnRjhyl-1XgIghgdlg-A4t0wVQM-uEW7Pf2E08RDmM
 
 ###
 
 # Test POST Request
 POST http://127.0.0.1:8000/students/student/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTk0MTM0LCJpYXQiOjE3MzI1OTM4MzQsImp0aSI6IjhmYzczOGFkZmNiNzRkM2E5NDYyMDU0MDBhYTk1NWZkIiwidXNlcl9pZCI6MX0.dL_IFjmNuXvyALOivF1G99Is5itP79UPYbNAa1Fmc_g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzYwOTAwLCJpYXQiOjE3MzI3NjA2MDAsImp0aSI6IjhhYmYxYTIwNWQyYjQ3Njk5MTMxZjUzMTIzNzFiN2ZjIiwidXNlcl9pZCI6MX0.sl8vPIas6LYIv55BmQ-20RPOQkHffTNY9FVZg4yiOtA
 
 {
-    "student_id": 5,
-    "name": "Haziq Khalis",
-    "age": 22,
-    "course": "Copmuter Networks"
+    "name": "Haris Rosdi",
+    "age": 23,
+    "course": "Computer Networks"
 }
 
 ###
@@ -32,12 +31,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 # Test PUT Request
 PUT http://127.0.0.1:8000/students/student/67454973d95c6cb089c881de/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTk0NDUzLCJpYXQiOjE3MzI1OTQxNTMsImp0aSI6IjVkMTliNzdiNDhhYTQzOGVhYWVjYjAzNzY3Zjc2NTk4IiwidXNlcl9pZCI6MX0.A5AZFEF6zhdr0liSkOw1tt3XzjMuddXOtadO79sXN0E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzYxNDg5LCJpYXQiOjE3MzI3NjExODksImp0aSI6IjY5NTk4NWU4MWYzMDQ3NzI4ZGEzODEzOTdmODM4YjA2IiwidXNlcl9pZCI6MX0.50ScL8hXhWbDgNP4jvy2WWjBed7FMbirwA5ZnB3O0eY
 
 {
     "student_id": 5,
     "name": "Haziq Khalis",
     "age": 22,
+    "course": "Computer Networks"
+}
+
+###
+
+# Test PATCH Request
+PATCH http://127.0.0.1:8000/students/student/674548d0d95c6cb089c881dd/ 
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzYxNDg5LCJpYXQiOjE3MzI3NjExODksImp0aSI6IjY5NTk4NWU4MWYzMDQ3NzI4ZGEzODEzOTdmODM4YjA2IiwidXNlcl9pZCI6MX0.50ScL8hXhWbDgNP4jvy2WWjBed7FMbirwA5ZnB3O0eY
+
+{
     "course": "Computer Networks"
 }
 

@@ -12,7 +12,7 @@ class StudentViewSet(ViewSet):
             data = request.data
             # Insert data into MongoDB
             student_id = Student.insert_student(data)
-            return Response({'status': 'success', 'student_id': str(student_id)}, status=status.HTTP_201_CREATED)
+            return Response({'status': 'success', '_id': student_id}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -23,8 +23,6 @@ class StudentViewSet(ViewSet):
                 return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
             student["_id"] = str(student["_id"])  # Convert ObjectId to string for JSON serialization
             return Response(student, status=status.HTTP_200_OK)
-        except InvalidId:
-            return Response({"error": "Invalid student ID format"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -35,8 +33,6 @@ class StudentViewSet(ViewSet):
             if updated_count:
                 return Response({'status': 'success', 'updated_count': updated_count}, status=status.HTTP_200_OK)
             return Response({'error': 'Update failed'}, status=status.HTTP_400_BAD_REQUEST)
-        except InvalidId:
-            return Response({"error": "Invalid student ID format"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -57,5 +53,21 @@ class StudentViewSet(ViewSet):
             for student in students:
                 student["_id"] = str(student["_id"])  # Convert ObjectId to string
             return Response({'students': students}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def partial_update(self, request, pk=None):
+        try:
+            # Parse data from the request
+            data = request.data
+            try:
+                student_id = ObjectId(pk)
+            except InvalidId:
+                return Response({"error": "Invalid student ID format"}, status=status.HTTP_400_BAD_REQUEST)
+
+            updated_count = Student.update_student(student_id, data)
+            if updated_count:
+                return Response({'status': 'success', 'updated_count': updated_count}, status=status.HTTP_200_OK)
+            return Response({'error': 'Student not found or update failed'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
